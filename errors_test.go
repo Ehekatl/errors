@@ -27,8 +27,19 @@ func TestNew(t *testing.T) {
 	}
 }
 
-func TestWrapNil(t *testing.T) {
-	got := Wrap(nil, "no error")
+func TestWrapPanic(t *testing.T) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("panic works")
+		} else {
+			t.Error("Wrap(nil, \"shoud panic\"): got no error, expected panic")
+		}
+	}()
+	Wrap(nil, "should panic error")
+}
+
+func TestMaybeWrapNil(t *testing.T) {
+	got := MaybeWrap(nil, "should no error")
 	if got != nil {
 		t.Errorf("Wrap(nil, \"no error\"): got %#v, expected nil", got)
 	}
@@ -46,6 +57,24 @@ func TestWrap(t *testing.T) {
 
 	for _, tt := range tests {
 		got := Wrap(tt.err, tt.message).Error()
+		if got != tt.want {
+			t.Errorf("Wrap(%v, %q): got: %v, want %v", tt.err, tt.message, got, tt.want)
+		}
+	}
+}
+
+func TestMaybeWrap(t *testing.T) {
+	tests := []struct {
+		err     error
+		message string
+		want    string
+	}{
+		{io.EOF, "read error", "read error: EOF"},
+		{MaybeWrap(io.EOF, "read error"), "client error", "client error: read error: EOF"},
+	}
+
+	for _, tt := range tests {
+		got := MaybeWrap(tt.err, tt.message).Error()
 		if got != tt.want {
 			t.Errorf("Wrap(%v, %q): got: %v, want %v", tt.err, tt.message, got, tt.want)
 		}

@@ -176,11 +176,32 @@ func (w *withStack) Format(s fmt.State, verb rune) {
 
 // Wrap returns an error annotating err with a stack trace
 // at the point Wrap is called, and the supplied message.
-// If err is nil, Wrap returns nil.
+// If err is nil, Wrap will panic
 func Wrap(err error, message string) error {
 	if err == nil {
-		return nil
+		panic(fmt.Sprintf("wrap error on nil interface with message: %s", message))
 	}
+	err = &withMessage{
+		cause: err,
+		msg:   message,
+	}
+	return &withStack{
+		err,
+		callers(),
+	}
+}
+
+// MaybeWrap returns an error annotating err with a stack trace
+// at the point Wrap is called, and the supplied message.
+// If err is nil, Wrap create new error
+func MaybeWrap(err error, message string) error {
+	if err == nil {
+		return &fundamental{
+			msg:   message,
+			stack: callers(),
+		}
+	}
+
 	err = &withMessage{
 		cause: err,
 		msg:   message,

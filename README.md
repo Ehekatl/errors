@@ -1,8 +1,10 @@
-# errors [![Travis-CI](https://travis-ci.org/pkg/errors.svg)](https://travis-ci.org/pkg/errors) [![AppVeyor](https://ci.appveyor.com/api/projects/status/b98mptawhudj53ep/branch/master?svg=true)](https://ci.appveyor.com/project/davecheney/errors/branch/master) [![GoDoc](https://godoc.org/github.com/pkg/errors?status.svg)](http://godoc.org/github.com/pkg/errors) [![Report card](https://goreportcard.com/badge/github.com/pkg/errors)](https://goreportcard.com/report/github.com/pkg/errors) [![Sourcegraph](https://sourcegraph.com/github.com/pkg/errors/-/badge.svg)](https://sourcegraph.com/github.com/pkg/errors?badge)
+# errors
 
-Package errors provides simple error handling primitives.
+**Forked from github.com/pkg/errors, this forked version simply make Warp panic on nil error and add MaybeWrap to force create new error when warp on nil interface**
 
-`go get github.com/pkg/errors`
+See the details at: https://github.com/pkg/errors/issues/90
+
+`go get github.com/Ehekatl/errors`
 
 The traditional error handling idiom in Go is roughly akin to
 ```go
@@ -39,7 +41,7 @@ default:
 }
 ```
 
-[Read the package documentation for more information](https://godoc.org/github.com/pkg/errors).
+[Read the package documentation for more information](https://godoc.org/github.com/Ehekatl/errors).
 
 ## Contributing
 
